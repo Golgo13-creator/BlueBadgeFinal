@@ -43,5 +43,31 @@ namespace Blue.WebAPI.Controllers
                 return InternalServerError();
             return Ok(players);
         }
+        [HttpPut]
+        public IHttpActionResult PutPlayers(int playerId, PlayerEdit player)
+        {
+            if (playerId < 1)
+                return BadRequest("Invalid Player Number entry");
+            if (player.PlayerId != playerId)
+                return BadRequest("Player Number missmatch");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var service = CreatePlayerService();
+            var isSuccessful = service.PutPlayers(player);
+            if (!isSuccessful)
+                return InternalServerError();
+            return Ok("Update Successful!");
+        }
+        [HttpDelete]
+        public IHttpActionResult DeletePlayer(int playerId)
+        {
+            if (playerId < 1)
+                return BadRequest("Invalid Player Number Entry.");
+            var service = CreatePlayerService();
+            var isSuccessful = service.DeletePlayers(playerId);
+            if (!isSuccessful)
+                return InternalServerError();
+            return Ok("Delete Successful");
+        }
     }
 }

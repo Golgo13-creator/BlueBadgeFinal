@@ -49,5 +49,29 @@ namespace Blue.Services
                 return query.ToArray();
             }
         }
+        public bool UpdateSport(SportEdit model)
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                var entity =
+                    ctx
+                        .Sports
+                        .Single(e => e.SportId == model.SportId);
+                entity.SportName = model.SportName;
+                return ctx.SaveChanges() == 1;
+            }
+        }
+        public bool DeleteSport(int sportId)
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                var entity =
+                    ctx
+                        .Sports
+                        .Single(e => e.SportId == sportId);
+                ctx.Sports.Remove(entity);
+                return ctx.SaveChanges() == 1;
+            }
+        }
     }
 }

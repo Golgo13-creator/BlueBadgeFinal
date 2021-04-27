@@ -49,5 +49,38 @@ namespace Blue.Services
                 return query.ToArray();
             }
         }
+        public bool PutPlayers(PlayerEdit newPlayerData)
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                var oldPlayerData =
+                    ctx
+                    .Players
+                    .SingleOrDefault(p => p.PlayerId == newPlayerData.PlayerId);
+
+                oldPlayerData.PlayerId = newPlayerData.PlayerId;
+                oldPlayerData.FirstName = newPlayerData.FirstName;
+                oldPlayerData.LastName = newPlayerData.LastName;
+                return ctx.SaveChanges() == 1;
+            }
+        }
+        public bool DeletePlayers(int playerId)
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                var playerToDelete =
+                    ctx
+                    .Players
+                    .Single(p => p.PlayerId == playerId);
+
+                if (playerToDelete != null)
+                {
+                    ctx.Players.Remove(playerToDelete);
+
+                    return ctx.SaveChanges() == 1;
+                }
+                return false;
+            }
+        }
     }
 }

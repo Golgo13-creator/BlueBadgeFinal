@@ -48,5 +48,48 @@ namespace Blue.Services
                 return query.ToArray();
             }
         }
+        public IEnumerable<AssignmentListItem> GetTeamsBySport(int sportId)
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                var query =
+                    ctx
+                        .Assignments
+                        .Where(e => e.SportId == sportId)
+                        .Select(
+                            e =>
+                                new AssignmentListItem
+                                {
+                                    SportId = e.SportId,
+                                    TeamId = e.TeamId
+                                }
+                        );
+                return query.ToArray();
+            }
+        }
+        public bool UpdateTeam(TeamEdit model)
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                var entity =
+                    ctx
+                        .Teams
+                        .Single(e => e.TeamId == model.TeamId);
+                entity.TeamName = model.TeamName;
+                return ctx.SaveChanges() == 1;
+            }
+        }
+        public bool DeleteTeam(int teamId)
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                var entity =
+                    ctx
+                        .Teams
+                        .Single(e => e.TeamId == teamId);
+                ctx.Teams.Remove(entity);
+                return ctx.SaveChanges() == 1;
+            }
+        }
     }
 }
